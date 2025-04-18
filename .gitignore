@@ -590,3 +590,6 @@ obj/
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,dotnetcore,csharp
+/ideas.docx
+/telemetry_11_23_15.pdf
+/update_db.sh
