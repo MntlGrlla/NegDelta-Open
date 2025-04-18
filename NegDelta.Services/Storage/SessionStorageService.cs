@@ -19,7 +19,12 @@ public class SessionStorageService
         
     }
 
-    public 
+    public async Task<Session?> GetSessionFullByIdAsync(string sessionId)
+    {
+        var context = await _contextFactory.CreateDbContextAsync();
+
+        
+    }
 
     // this method retrieves summaries of all sessions stored in the database.
     public async Task<List<SessionSummaryDTO>> GetSessionSummariesAsync()
