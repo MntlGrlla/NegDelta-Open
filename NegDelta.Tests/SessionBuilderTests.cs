@@ -72,4 +72,29 @@ public class SessionBuilderTests
 
         Assert.Equal("No active stint. Start a stint before completing one.", ex.Message);
     }
+
+    [Fact]
+    public void CompleteStint_SetsFastestLapCorrectly()
+    {
+        
+        var builder = new SessionBuilder(SessionType.Practice, "Porsche 911 GT3", "Spa-Francorchamps");
+        builder.StartNewStint();
+
+        var telemetry = new List<TelemetryPoint>(); // Can be empty for testing
+        var positions = new List<PositionPoint>();
+        var sectors = new List<Sector>();
+
+        builder.AddLap(TimeSpan.FromSeconds(82), telemetry, positions, sectors); // Lap 1
+        builder.AddLap(TimeSpan.FromSeconds(78), telemetry, positions, sectors); // Lap 2 - fastest
+        builder.AddLap(TimeSpan.FromSeconds(85), telemetry, positions, sectors); // Lap 3
+
+        builder.CompleteStint();
+        var session = builder.Build();
+        var stint = session.Stints[0];
+        var fastestLap = stint.Laps.Find(l => l.Id == stint.FastestLapID);
+
+        Assert.NotNull(fastestLap);
+        Assert.Equal(TimeSpan.FromSeconds(78), stint.FastestLapTime);
+        Assert.Equal(fastestLap.Id, stint.FastestLapID);
+    }
 }

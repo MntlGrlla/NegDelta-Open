@@ -68,6 +68,10 @@ public class SessionBuilder
             throw new InvalidOperationException("No active stint. Start a stint before completing one."); 
         }
 
+        Lap fastestLap = _currentStint.Laps.MinBy(l => l.LapTime)!; // We know it's not going to be null. (! operator)
+        _currentStint.FastestLapID = fastestLap.Id;
+        _currentStint.FastestLapTime = fastestLap.LapTime;
+
         _currentStint = null;
         _currentStintNumber++;
         _currentLapNumber = 1;
@@ -80,6 +84,13 @@ public class SessionBuilder
             throw new InvalidOperationException("A stint is still in progress. " +
                 "Complete the current stint before building the session.");
         }
+
+        List<Lap> laps = new List<Lap>();
+        foreach (var s in _currentSession.Stints)
+        {
+            laps.Add(s.Laps.MinBy(l => l.LapTime)!); // We know it's not going to be null. 
+        } 
+
         return _currentSession;
     }
 }
