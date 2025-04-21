@@ -593,3 +593,8 @@ obj/
 /ideas.docx
 /telemetry_11_23_15.pdf
 /update_db.sh
+
+# database ignores
+*.db
+*.db-shm
+*.db-wal

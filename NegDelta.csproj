@@ -117,4 +117,9 @@
       <ProjectReference Include="NegDelta.Services\NegDelta.Services.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Components\Controls\" />
+      <Folder Include="Components\Pages\" />
+    </ItemGroup>
+
 </Project>
