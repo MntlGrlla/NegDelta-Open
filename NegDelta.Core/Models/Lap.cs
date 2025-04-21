@@ -3,6 +3,7 @@
 public class Lap
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string StintId { get; set; } = string.Empty;
     public TimeSpan LapTime { get; set; }
     public int LapNumber { get; set; }
     public List<TelemetryPoint> TelemetryPoints { get; set; } = new();
