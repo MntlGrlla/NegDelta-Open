@@ -11,6 +11,7 @@ public class SessionDbContext : DbContext
     public DbSet<Lap> Laps { get; set; } 
     public DbSet<TelemetryPoint> TelemetryPoints { get; set; }
     public DbSet<PositionPoint> PositionPoints { get; set; }
+    public DbSet<Sector> SectorTimes { get; set; } 
 
     public SessionDbContext(DbContextOptions<SessionDbContext> options) : base(options)
     {
