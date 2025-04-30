@@ -1,0 +1,68 @@
+﻿@page "/SessionView"
+
+@using NegDelta.Services.Builders
+
+@inject SessionStorageService sss
+@inject NavigationManager navManager
+
+<PageTitle>Sessions</PageTitle>
+<div>
+    <MudButton class="btn-light" onclick="AddSession">
+        Add Session
+    </MudButton>
+    <MudButton class="btn-light" onclick="LoadSessions">
+        Load Sessions
+    </MudButton>
+</div>
+@if (sessions is null)
+{
+    <p>Loading...</p>
+
+}
+else
+{
+    <MudPaper Class="px-4">
+        <MudTable Items="@sessions">
+            <HeaderContent>
+                <MudTh>Track</MudTh>
+                <MudTh>Car</MudTh>
+                <MudTh>Fastest Lap</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.TrackName</MudTd>
+                <MudTd>@context.CarName</MudTd>
+                <MudTd>@context.FastestLapTime</MudTd>
+                <MudTd></MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+}
+
+
+@code {
+    private List<SessionSummaryDTO>? sessions;
+    private int pageSize = 10;
+    private int pageNumber = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sessions = await sss.GetSessionSummariesAsync(pageNumber, pageSize);
+    }
+
+    public async Task AddSession()
+    {
+        var builder = new SessionBuilder(SessionType.Practice, "Test Car", "Test Track");
+        builder.StartNewStint();
+        builder.AddLap(TimeSpan.FromSeconds(97), new(), new(), new());
+        builder.CompleteStint();
+        var session = builder.Build();
+        await sss.SaveSessionAsync(session);
+    }
+
+    public async Task LoadSessions()
+    {
+        sessions = await sss.GetSessionSummariesAsync(pageNumber, pageSize);
+        StateHasChanged();
+    }
+}
