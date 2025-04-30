@@ -7,6 +7,7 @@ using NegDelta.Services.Runtime.Interfaces;
 using NegDelta.Core.Models;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using NegDelta.Services.Builders;
 
 
 namespace NegDelta;
@@ -27,6 +28,8 @@ public static class MauiProgram
 		builder.Services.AddMudServices();
 
 		builder.Services.AddSingleton<ISimService, IRacingService>();
+		builder.Services.AddSingleton<SessionStorageService>();
+		builder.Services.AddScoped<SessionBuilder>();
 
         // Creating the db context at the desired path
         builder.Services.AddDbContextFactory<SessionDbContext>(options =>
