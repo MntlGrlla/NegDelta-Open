@@ -11,6 +11,9 @@ public class SessionBuilder
     private int _currentStintNumber = 1;
     private int _currentLapNumber = 1;
 
+    // Todo: Add summaries for each method
+    // Todo: Create checks for stints to make sure they have a sufficient number of laps before completing them. 
+    
     public SessionBuilder(SessionType type, string carName, string trackName)
     {
         _currentSession = new Session
@@ -22,7 +25,7 @@ public class SessionBuilder
         };
     }
 
-    public void StartNewStint()
+    public SessionBuilder StartNewStint()
     {
         if (_currentStint is not null)
         {
@@ -32,13 +35,16 @@ public class SessionBuilder
 
         _currentStint = new Stint
         {
+            SessionId = _currentSession.Id,
             StintNumber = _currentStintNumber,
         };
-
+        
         _currentSession.Stints.Add(_currentStint);
+
+        return this;
     }
 
-    public void AddLap(
+    public SessionBuilder AddLap(
         TimeSpan lapTime,
         List<TelemetryPoint> telemetryPoints,
         List<PositionPoint> positionPoints,
@@ -51,6 +57,7 @@ public class SessionBuilder
         }
 
         var lap = LapFactory.CreateLap(
+            _currentStint.Id,
             _currentLapNumber,
             lapTime,
             telemetryPoints,
@@ -59,9 +66,11 @@ public class SessionBuilder
 
         _currentStint.Laps.Add(lap);
         _currentLapNumber++;
+
+        return this;
     }
 
-    public void CompleteStint()
+    public SessionBuilder CompleteStint()
     {
         if (_currentStint is null)
         {
@@ -72,9 +81,17 @@ public class SessionBuilder
         _currentStint.FastestLapID = fastestLap.Id;
         _currentStint.FastestLapTime = fastestLap.LapTime;
 
+        if (fastestLap.LapTime < _currentSession.FastestLapTime ||
+            _currentSession.FastestLapTime == TimeSpan.Zero)
+        {
+            _currentSession.FastestLapTime = fastestLap.LapTime;
+        }
+
         _currentStint = null;
         _currentStintNumber++;
         _currentLapNumber = 1;
+
+        return this;
     }
 
     public Session Build()

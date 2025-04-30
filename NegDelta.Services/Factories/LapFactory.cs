@@ -4,6 +4,7 @@ namespace NegDelta.Services.Factories;
 public static class LapFactory
 {
     public static Lap CreateLap(
+        string parentStintId,
         int lapNumber,
         TimeSpan LapTime,
         List<TelemetryPoint> telemetryPoints,
@@ -12,6 +13,7 @@ public static class LapFactory
     {
         return new Lap
         {
+            StintId = parentStintId,
             LapNumber = lapNumber,
             LapTime = LapTime,
             TelemetryPoints = telemetryPoints,
